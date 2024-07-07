@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { getOrderByOperators } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
@@ -7,12 +8,12 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   headers();
-  const images = await db.query.posts.findMany({
-    order: (model, { asc }) => asc(model.id),
-  });
 
-  return (
-    <main className="">
+  async function Images() {
+    const images = await db.query.posts.findMany({
+      orderBy: (model, { asc }) => asc(model.id),
+    });
+    return (
       <div className="flex flex-wrap gap-4 p-9">
         {images.map((image) => (
           <div key={image.id} className="flex w-48 flex-col">
@@ -21,6 +22,19 @@ export default async function HomePage() {
           </div>
         ))}
       </div>
+    );
+  }
+
+  return (
+    <main className="">
+      <SignedOut>
+        <div className="h-full w-full text-center text-2xl">
+          Please sign in above to view the gallery
+        </div>
+      </SignedOut>
+      <SignedIn>
+        <Images />
+      </SignedIn>
     </main>
   );
 }
