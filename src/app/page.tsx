@@ -19,15 +19,17 @@ export default async function HomePage() {
       <div className="flex flex-wrap justify-center gap-4 p-9">
         {images.map((image) => (
           <div key={image.id} className="flex h-48 w-48 flex-col">
-            <Image
-              src={image.url}
-              style={{
-                objectFit: "contain",
-              }}
-              width={480}
-              height={480}
-              alt={image.name}
-            />
+            <Link href={`/img/${image.id}`}>
+              <Image
+                src={image.url}
+                style={{
+                  objectFit: "contain",
+                }}
+                width={480}
+                height={480}
+                alt={image.name}
+              />
+            </Link>
             <div>{image.name}</div>
           </div>
         ))}
