@@ -18,8 +18,8 @@ import {
  */
 export const createTable = pgTableCreator((name) => `t3gallery_${name}`);
 
-export const posts = createTable(
-  "post",
+export const images = createTable(
+  "image",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }).notNull(),
@@ -27,6 +27,9 @@ export const posts = createTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+
+    userId: varchar("userId", { length: 256 }).notNull(),
+
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
       () => new Date(),
     ),
