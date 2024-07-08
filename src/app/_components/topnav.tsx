@@ -11,7 +11,10 @@ export function TopNav() {
       className="flex w-full items-center justify-between border-b p-4 text-xl 
     font-semibold"
     >
-      <div>Gallery</div>
+      <div>
+        <span className="text-4xl">🥞</span>
+        <span className="text-3xl"> Pankekgram </span>
+      </div>
       <div className="flex flex-row">
         <SignedOut>
           <SignInButton />
