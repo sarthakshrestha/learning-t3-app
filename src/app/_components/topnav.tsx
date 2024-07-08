@@ -12,8 +12,19 @@ export function TopNav() {
     font-semibold"
     >
       <div>
-        <span className="text-4xl">🥞</span>
-        <span className="text-3xl"> Pankekgram </span>
+        <span
+          className="cursor-pointer text-4xl"
+          onClick={() => router.push("/")}
+        >
+          🥞
+        </span>
+        <span
+          className="cursor-pointer text-3xl"
+          onClick={() => router.push("/")}
+        >
+          {" "}
+          Pankekgram{" "}
+        </span>
       </div>
       <div className="flex flex-row">
         <SignedOut>
