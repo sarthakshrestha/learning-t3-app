@@ -48,8 +48,8 @@ export default async function HomePage() {
   return (
     <main className="">
       <SignedOut>
-        <div className="mt-2 h-full w-full text-center text-2xl max-sm:text-xl">
-          Please sign in above to view the gallery
+        <div className="mt-4 h-full w-full text-center text-2xl max-sm:mt-3 max-sm:max-w-md max-sm:text-xl">
+          Please sign in to view your gallery on Pankekgram
         </div>
       </SignedOut>
       <SignedIn>
