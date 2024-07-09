@@ -16,22 +16,29 @@ export default async function HomePage() {
     const images = await getMyImages();
 
     return (
-      <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
         {images.map((image) => (
-          <div key={image.id} className="flex flex-col items-center">
+          <div
+            key={image.id}
+            className="flex flex-col overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-lg"
+          >
             <Link
               href={`/img/${image.id}`}
-              className="flex h-48 w-48 items-center justify-center"
+              className="relative aspect-square w-full overflow-hidden"
             >
               <Image
                 src={image.url}
-                width={192}
-                height={192}
+                layout="fill"
+                objectFit="cover"
                 alt={image.name}
-                className="max-h-full max-w-full object-contain"
+                className="transition-transform duration-300 hover:scale-105"
               />
             </Link>
-            <div className="mt-2 text-center">{image.name}</div>
+            <div className="p-4">
+              <h3 className="text-center text-sm font-bold text-white">
+                {image.name}
+              </h3>
+            </div>
           </div>
         ))}
       </div>

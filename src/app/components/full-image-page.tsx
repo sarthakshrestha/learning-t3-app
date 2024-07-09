@@ -1,21 +1,34 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { getImage } from "~/server/queries";
 
 export default async function FullPageImageView(props: { id: number }) {
   const image = await getImage(props.id);
+  const uploaderInfo = await clerkClient.users.getUser(image.userId);
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-zinc-900 md:flex-row">
-      <div className="flex flex-1 flex-col items-center justify-center space-y-4 p-4">
-        <img
-          src={image.url}
-          alt={image.name}
-          className="max-h-[70vh] w-auto max-w-full rounded-lg object-contain shadow-lg"
-        />
-        <h2 className="text-center text-xl font-bold text-white md:text-2xl">
-          {image.name}
-        </h2>
+    <div className="flex min-h-screen w-full items-center justify-center bg-black p-4">
+      <div className="w-full max-w-4xl">
+        <div className="flex flex-col items-center space-y-6">
+          <div className="relative aspect-square w-full">
+            <img
+              src={image.url}
+              alt={image.name}
+              className="absolute inset-0 h-full w-full rounded-lg object-contain shadow-2xl"
+            />
+          </div>
+          <div className="space-y-2 text-center">
+            <h2 className="text-xl font-bold text-white sm:text-2xl md:text-3xl">
+              {image.name}
+            </h2>
+            <p className="text-sm text-gray-400 sm:text-base">
+              Uploaded by: {uploaderInfo.fullName}
+            </p>
+            <p className="text-xs text-gray-400 sm:text-base">
+              Created on: {new Date(image.createdAt).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
       </div>
-      {/* <div className="w-full border-t border-zinc-700 bg-zinc-800 p-6 md:w-64 md:border-l"></div> */}
     </div>
   );
 }
