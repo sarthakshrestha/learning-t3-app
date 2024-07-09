@@ -33,8 +33,10 @@ export default function RootLayout({
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
         <body className="flex flex-col gap-4">
-          <TopNav />
-          {children}
+          <div className="h-screen grid grid-rows-[auto,1fr]">
+            <TopNav />
+            {children}
+          </div>
           {modal}
           <div id="modal-root" />
         </body>
