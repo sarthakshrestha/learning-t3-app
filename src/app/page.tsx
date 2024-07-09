@@ -48,7 +48,7 @@ export default async function HomePage() {
   return (
     <main className="">
       <SignedOut>
-        <div className="h-full w-full text-center text-2xl">
+        <div className="mt-2 h-full w-full text-center text-2xl max-sm:text-xl">
           Please sign in above to view the gallery
         </div>
       </SignedOut>

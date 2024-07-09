@@ -5,7 +5,6 @@ import { useUploadThing } from "../utils/uploadingthing";
 import { toast } from "sonner";
 import { usePostHog } from "posthog-js/react";
 
-// inferred input off useUploadThing
 type Input = Parameters<typeof useUploadThing>;
 
 const useUploadThingInputProps = (...args: Input) => {
@@ -13,12 +12,9 @@ const useUploadThingInputProps = (...args: Input) => {
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-
     const selectedFiles = Array.from(e.target.files);
     const result = await $ut.startUpload(selectedFiles);
-
     console.log("uploaded files", result);
-    // TODO: persist result in state maybe?
   };
 
   return {
@@ -39,7 +35,7 @@ function UploadSVG() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="mr-4 h-6 w-6 max-sm:mr-2"
+      className="h-6 w-6 sm:mr-2"
     >
       <path
         strokeLinecap="round"
@@ -57,55 +53,58 @@ function LoadingSpinnerSVG() {
       height="24"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
-      fill="white"
+      fill="currentColor"
+      className="animate-spin"
     >
       <path
         d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
         opacity=".25"
       />
-      <path
-        d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
-        className="spinner_ajPY"
-      />
+      <path d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z" />
     </svg>
   );
 }
 
 export function SimpleUploadButton() {
   const router = useRouter();
-
   const posthog = usePostHog();
 
-  const { inputProps } = useUploadThingInputProps("imageUploader", {
-    onUploadBegin() {
-      posthog.capture("upload_begin");
-      toast(
-        <div className="flex items-center gap-2 text-white">
-          <LoadingSpinnerSVG /> <span className="text-lg">Uploading...</span>
-        </div>,
-        {
-          duration: 100000,
-          id: "upload-begin",
-        },
-      );
+  const { inputProps, isUploading } = useUploadThingInputProps(
+    "imageUploader",
+    {
+      onUploadBegin() {
+        posthog.capture("upload_begin");
+        toast(
+          <div className="flex items-center gap-2 text-white">
+            <LoadingSpinnerSVG /> <span className="text-lg">Uploading...</span>
+          </div>,
+          {
+            duration: 100000,
+            id: "upload-begin",
+          },
+        );
+      },
+      onUploadError(error) {
+        posthog.capture("upload_error", { error });
+        toast.dismiss("upload-begin");
+        toast.error("Upload failed");
+      },
+      onClientUploadComplete() {
+        toast.dismiss("upload-begin");
+        toast("Upload complete!");
+        router.refresh();
+      },
     },
-    onUploadError(error) {
-      posthog.capture("upload_error", { error });
-      toast.dismiss("upload-begin");
-      toast.error("Upload failed");
-    },
-    onClientUploadComplete() {
-      toast.dismiss("upload-begin");
-      toast("Upload complete!");
-
-      router.refresh();
-    },
-  });
+  );
 
   return (
-    <div className="mr-3 max-sm:mr-2">
-      <label htmlFor="upload-button" className="ml-2 cursor-pointer">
-        <UploadSVG />
+    <div className="flex items-center">
+      <label
+        htmlFor="upload-button"
+        className="mr-2 flex cursor-pointer items-center rounded-full bg-zinc-900 p-2 text-white transition-colors"
+      >
+        {isUploading ? <LoadingSpinnerSVG /> : <UploadSVG />}
+        <span className="hidden sm:inline-block">Upload</span>
       </label>
       <input
         id="upload-button"
